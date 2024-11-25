@@ -1,0 +1,3 @@
+/.idea/*
+/dev_utils/llm_dev_tools/prompt_builder/.idea/*
+**/__pycache__/
