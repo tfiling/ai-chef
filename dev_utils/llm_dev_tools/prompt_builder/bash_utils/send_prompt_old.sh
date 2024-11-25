@@ -1,5 +1,6 @@
 #!/bin/bash
-#TODO - this version opens a fresh claude tab
+
+set -x
 
 # Example usage:
 # send_prompt "Hello, this is my prompt"
@@ -22,9 +23,11 @@ send_prompt() {
         return 1
     }
 
-    # Open Chrome with the specific URL
-    google-chrome "$TARGET_URL" &
-    echo "opened claude tab"
+    # If Chrome isn't running, start it
+    if ! pgrep -x "chrome" > /dev/null; then
+        google-chrome &
+        echo "Starting Chrome..."
+    fi
 
     # Wait for Chrome to open
     if ! wait_for_chrome; then
@@ -39,20 +42,28 @@ send_prompt() {
     # Activate the window
     xdotool windowactivate --sync $WINDOW_ID
 
-    # Wait a bit for the page to load
-    sleep 3
-
-    # Delete previous prompt
-    xdotool key --clearmodifiers --delay 100 ctrl+a
-    sleep 0.5
-    xdotool key --clearmodifiers --delay 100 Delete
-    sleep 0.5
+#    # Delete previous prompt - unnecessary ATM
+#    sleep 0.5
+#    xdotool key --clearmodifiers --delay 100 ctrl+a
+#    sleep 0.5
+#    xdotool key --clearmodifiers --delay 100 Delete
+#    sleep 0.5
 
     # Paste the text (simulates Ctrl+V)
     echo -n "$text_to_send" | xclip -selection clipboard
-    xdotool key --clearmodifiers ctrl+v
-    xdotool key --clearmodifiers Return
+    xdotool key ctrl+v
+    sleep 0.5
+    xdotool key Return
+    return
+
+    # Clear potential stuck keys - from https://github.com/jordansissel/xdotool/issues/43
+#    Commented bc it might get the script stuck
+#    sleep 0.5
+#    xdotool keyup Meta_L Meta_R Alt_L Alt_R Super_L Super_R
 }
 
-[[ $# -eq 0 ]] && { echo "Usage: $0 'your prompt text'"; exit 1; }
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 'your prompt text'"
+    exit 1
+fi
 send_prompt "$1"
