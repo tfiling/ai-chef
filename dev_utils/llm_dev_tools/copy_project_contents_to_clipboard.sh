@@ -27,9 +27,9 @@ tree "$DIRECTORY" $EXCLUDE_PATTERN > "$TEMP_FILE"
 
 cd "$DIRECTORY" || exit 1
 
-FIND_CMD="find . -type d"
+FIND_CMD="find ."
 for EXCLUDE_DIR in "${EXCLUDE_DIRS[@]}"; do
-    FIND_CMD+=" \( -path './$EXCLUDE_DIR' -prune \) -o"
+    FIND_CMD+=" -not -path '*/${EXCLUDE_DIR}/*' -not -path '*/${EXCLUDE_DIR}'"
 done
 FIND_CMD+=" -type f"
 for EXCLUDE_FILE in "${EXCLUDE_FILES[@]}"; do
