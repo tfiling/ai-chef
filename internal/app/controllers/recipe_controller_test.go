@@ -16,7 +16,7 @@ import (
 	"github.com/tfiling/ai-chef/internal/pkg/store"
 )
 
-func setupTestApp(t *testing.T, mockStore *store.MockRecipeStore) *fiber.App {
+func setupTestRecipeController(t *testing.T, mockStore *store.MockRecipeStore) *fiber.App {
 	app := fiber.New()
 	controller := &controllers.RecipeController{RecipeStore: mockStore}
 	err := controller.RegisterRoutes(app)
@@ -27,7 +27,7 @@ func setupTestApp(t *testing.T, mockStore *store.MockRecipeStore) *fiber.App {
 func TestRecipeController_CreateRecipe_SuccessfullyCreateRecipe(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	recipe := &models.Recipe{Name: "Test Recipe"}
 	expectedRecipe := &models.Recipe{ID: "123", Name: "Test Recipe"}
@@ -56,7 +56,7 @@ func TestRecipeController_CreateRecipe_SuccessfullyCreateRecipe(t *testing.T) {
 func TestRecipeController_CreateRecipe_InvalidJSON(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	invalidJSON := []byte(`{"name": Invalid JSON}`)
 
@@ -70,7 +70,7 @@ func TestRecipeController_CreateRecipe_InvalidJSON(t *testing.T) {
 func TestRecipeController_CreateRecipe_StoreCreationFailure(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	recipe := &models.Recipe{Name: "Test Recipe"}
 	mockStore.On("Create", mock.Anything, mock.AnythingOfType("*models.Recipe")).Return(nil, fiber.NewError(fiber.StatusInternalServerError))
@@ -91,7 +91,7 @@ func TestRecipeController_CreateRecipe_StoreCreationFailure(t *testing.T) {
 func TestRecipeController_GetRecipes_SuccessfullyRetrieveAllRecipes(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	expectedRecipes := []models.Recipe{{ID: "1", Name: "Recipe 1"}, {ID: "2", Name: "Recipe 2"}}
 	mockStore.On("GetAll", mock.Anything).Return(expectedRecipes, nil)
@@ -112,7 +112,7 @@ func TestRecipeController_GetRecipes_SuccessfullyRetrieveAllRecipes(t *testing.T
 func TestRecipeController_GetRecipes_EmptyRecipeList(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	expectedRecipes := []models.Recipe{}
 	mockStore.On("GetAll", mock.Anything).Return(expectedRecipes, nil)
@@ -133,7 +133,7 @@ func TestRecipeController_GetRecipes_EmptyRecipeList(t *testing.T) {
 func TestRecipeController_GetRecipes_StoreRetrievalFailure(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	mockStore.On("GetAll", mock.Anything).Return(nil, fiber.NewError(fiber.StatusInternalServerError))
 
@@ -148,7 +148,7 @@ func TestRecipeController_GetRecipes_StoreRetrievalFailure(t *testing.T) {
 func TestRecipeController_GetRecipe_SuccessfullyRetrieveRecipe(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	expectedRecipe := &models.Recipe{ID: "123", Name: "Test Recipe"}
 	mockStore.On("GetByID", mock.Anything, "123").Return(expectedRecipe, nil)
@@ -170,7 +170,7 @@ func TestRecipeController_GetRecipe_SuccessfullyRetrieveRecipe(t *testing.T) {
 func TestRecipeController_GetRecipe_RecipeNotFound(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	mockStore.On("GetByID", mock.Anything, "123").Return(nil, fiber.NewError(fiber.StatusNotFound))
 
@@ -185,7 +185,7 @@ func TestRecipeController_GetRecipe_RecipeNotFound(t *testing.T) {
 func TestRecipeController_UpdateRecipe_SuccessfullyUpdateRecipe(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	recipe := &models.Recipe{Name: "Updated Recipe"}
 	expectedRecipe := &models.Recipe{ID: "123", Name: "Updated Recipe"}
@@ -214,7 +214,7 @@ func TestRecipeController_UpdateRecipe_SuccessfullyUpdateRecipe(t *testing.T) {
 func TestRecipeController_UpdateRecipe_InvalidJSON(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	invalidJSON := []byte(`{"name": Invalid JSON}`)
 
@@ -228,7 +228,7 @@ func TestRecipeController_UpdateRecipe_InvalidJSON(t *testing.T) {
 func TestRecipeController_UpdateRecipe_StoreUpdateFailure(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	recipe := &models.Recipe{Name: "Updated Recipe"}
 	mockStore.On("Update", mock.Anything, mock.AnythingOfType("*models.Recipe")).Return(nil, fiber.NewError(fiber.StatusInternalServerError))
@@ -249,7 +249,7 @@ func TestRecipeController_UpdateRecipe_StoreUpdateFailure(t *testing.T) {
 func TestRecipeController_DeleteRecipe_SuccessfullyDeleteRecipe(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	mockStore.On("Delete", mock.Anything, "123").Return(nil)
 
@@ -264,7 +264,7 @@ func TestRecipeController_DeleteRecipe_SuccessfullyDeleteRecipe(t *testing.T) {
 func TestRecipeController_DeleteRecipe_StoreDeletionFailure(t *testing.T) {
 	// Arrange
 	mockStore := new(store.MockRecipeStore)
-	app := setupTestApp(t, mockStore)
+	app := setupTestRecipeController(t, mockStore)
 
 	mockStore.On("Delete", mock.Anything, "123").Return(fiber.NewError(fiber.StatusInternalServerError))
 
