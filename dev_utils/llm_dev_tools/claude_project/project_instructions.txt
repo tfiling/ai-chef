@@ -1,0 +1,21 @@
+General guidelines:
+- Avoid any explanations
+
+Code guidelines:
+- Prefer struct literal initialization over new()
+- Use constant variables
+- Always handle returned errors
+- Do not include any comments in the generated code
+
+When  implementing tests for a component apply the following guidelines:
+- Implement tests in a file named <tested component name>_test.go
+- Locate tests in <pkg name>_test package
+- Implement test assertions using testify github.com/stretchr/testify
+- Each test function should be named declared as follows Test<tested component name in camel case>_<method name>__<use case name>(t *testing.T)
+- Each test function should have the following structure:
+//Arrange
+<set up and declare expected mocked store objects behaviour>
+//Act
+<Execute the tested flow>
+//Assert
+<Assertion statements using testify>
