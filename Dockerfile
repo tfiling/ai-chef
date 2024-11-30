@@ -27,6 +27,12 @@ FROM base AS unit-test
 RUN --mount=type=cache,target=/root/.cache/go-build \
     go test -v ./...
 
+FROM base AS linter
+ENV BINDIR=/usr/local/bin
+RUN wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.62.2
+RUN golangci-lint run
+
+
 FROM base AS build-webserver
 RUN --mount=type=cache,target=/root/.cache/go-build \
     GOOS=${TARGETOS} GOARCH=${TARGETARCH} \

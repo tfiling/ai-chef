@@ -14,7 +14,7 @@ build-webserver:
 	@echo "====================== building webserver completed ======================"
 
 .PHOMY: run
-run: test
+run: test lint
 	@echo "====================== Running Local Dev Env ======================"
 	@TAG=${IMAGE_TAG} docker compose -f dev_utils/local_dev_env/compose.yaml up -d
 
@@ -28,3 +28,11 @@ test: build
 	@echo "====================== Running Tests ======================"
 	docker build . --target unit-test --tag $(LOCAL_REPO)/webserver-tests:latest
 	@echo "====================== Completed Running Tests ======================"
+
+
+.PHONY: lint
+lint: build
+	@echo "====================== Running Linter ======================"
+	docker build . --target linter --tag $(LOCAL_REPO)/webserver-tests:latest
+	@echo "====================== Completed Running Linter ======================"
+
