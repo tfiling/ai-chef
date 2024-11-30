@@ -5,3 +5,4 @@ model: |
       Username string `json:"name" validate:"required"`
   }
 go_module_name: github.com/tfiling/ai-chef
+base_dir: /home/galt/code/ai_chef
