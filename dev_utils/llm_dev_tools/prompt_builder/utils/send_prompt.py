@@ -2,8 +2,8 @@ import pathlib
 import subprocess
 import sys
 import traceback
-import tkinter as tk
-from tkinter import messagebox
+
+from utils.user_interactions import wait_for_user
 
 
 def send_prompt(text: str):
@@ -16,6 +16,7 @@ def send_prompt(text: str):
     send_prompt_path = pathlib.Path(__file__).parent.parent.absolute() / "bash_utils" / "send_prompt.sh"
 
     try:
+        wait_for_user("Focus on Claude's input\nClick OK to continue")
         result = subprocess.run([send_prompt_path, text],
                                 capture_output=True,
                                 text=True,
@@ -31,11 +32,3 @@ def send_prompt(text: str):
     except FileNotFoundError:
         print("Error: send_prompt.sh script not found", file=sys.stderr)
         sys.exit(1)
-    wait_for_user("Focus on Claude's input\nClick OK to continue")
-
-
-def wait_for_user(msg="Click OK to continue"):
-    root = tk.Tk()
-    root.withdraw()
-    messagebox.showinfo("Confirmation", msg)
-    root.destroy()
