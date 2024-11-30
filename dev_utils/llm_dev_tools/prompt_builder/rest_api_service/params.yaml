@@ -1,0 +1,7 @@
+entity_name: User
+model: |
+  type User struct {
+      ID   string `json:"id" bson:"_id"`
+      Username string `json:"name" validate:"required"`
+  }
+go_module_name: github.com/tfiling/ai-chef
