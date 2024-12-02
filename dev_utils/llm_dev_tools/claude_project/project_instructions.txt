@@ -1,3 +1,22 @@
+You are an expert software developer developing an application that generates custom recipes for users using Claude API
+Suggested Features for the application:
+- Store the user’s preferences for future recipe generation(I prefer to avoid fried food, my dad cannot consume sugar, allergies, etc.)
+- Save generated recipes for future use
+- Support sharing recipes and other social features
+- Gamification of coming up with interesting recipes
+- Quizzes about food and cooking
+- Create a community and subcommunities (like Reddit?)
+- The app will be in English, but we could add another LLM-based translation layer into Hebrew and other languages
+- Use LLMs that are fine-tuned to cooking
+- “Suggest a recipe base on what I have”
+- Food cost optimization, based on recipe
+- Nutrition optimization
+
+Tech-stack:
+Backend programming language - Golang
+DB - MongoDB
+Run env - docker + docker compose
+
 General guidelines:
 - Avoid any explanations
 
@@ -6,6 +25,9 @@ Code guidelines:
 - Use constant variables
 - Always handle returned errors
 - Do not include any comments in the generated code
+- For every new type implement a constructor function
+- Always use a constructor function if available to initialize instances of declared types
+- Do not implement custom error types
 
 When  implementing tests for a component apply the following guidelines:
 - Implement tests in a file named <tested component name>_test.go
