@@ -1,15 +1,15 @@
 #!/bin/bash
 
+source ./utils/project_tree.sh
+
 DIRECTORY="/home/galt/code/ai_chef"
 TEMP_FILE=$(mktemp)
 
 # Define exclusions: List directories and files to exclude
-# TREE_EXCLUDE_DIRS=(".git" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github")
 # EXCLUDE_DIRS=(".git" "deploy" "cmd" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github")
 # EXCLUDE_FILES=("go.mod" "go.sum" "Dockerfile" "makefile" ".gitignore" "README.md" "*.png" "*.ico" "package-lock.json")
-TREE_EXCLUDE_DIRS=(".git" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github" "dev_utils")
 EXCLUDE_DIRS=(".git" "deploy" "cmd" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github" "run_outputs" "__pycache__" ".venv" "dev_utils")
-EXCLUDE_FILES=("go.mod" "go.sum" "Dockerfile" "makefile" ".gitignore" "README.md" "*.png" "*.ico" "package-lock.json", "approved_employers.csv")
+EXCLUDE_FILES=("go.mod" "go.sum" "Dockerfile" "makefile" ".gitignore" "README.md" "*.png" "*.ico" "package-lock.json")
 
 
 if [ ! -d "$DIRECTORY" ]; then
@@ -17,13 +17,7 @@ if [ ! -d "$DIRECTORY" ]; then
   exit 1
 fi
 
-# Generate the exclude pattern for tree command
-EXCLUDE_PATTERN=""
-for EXCLUDE_DIR in "${TREE_EXCLUDE_DIRS[@]}"; do
-    EXCLUDE_PATTERN+="-I $EXCLUDE_DIR "
-done
-
-tree "$DIRECTORY" $EXCLUDE_PATTERN > "$TEMP_FILE"
+project_tree "$DIRECTORY" "$TEMP_FILE"
 
 cd "$DIRECTORY" || exit 1
 
