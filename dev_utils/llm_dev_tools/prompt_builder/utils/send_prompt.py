@@ -6,17 +6,12 @@ import traceback
 from utils.user_interactions import wait_for_user
 
 
-def send_prompt(text: str):
-    """
-    Sends a prompt to Claude via the send_prompt bash script
-
-    Args:
-        text (str): The prompt text to send
-    """
+def send_prompt(text: str, should_wait_user=True):
     send_prompt_path = pathlib.Path(__file__).parent.parent.absolute() / "bash_utils" / "send_prompt.sh"
 
     try:
-        wait_for_user("Focus on Claude's input\nClick OK to continue")
+        if should_wait_user:
+            wait_for_user("Focus on Claude's input\nClick OK to continue")
         result = subprocess.run([send_prompt_path, text],
                                 capture_output=True,
                                 text=True,
