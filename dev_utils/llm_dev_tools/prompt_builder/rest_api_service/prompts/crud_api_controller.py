@@ -16,17 +16,8 @@ def __get_entity_model():
 
 
 # TODO - extract tech stack: Mongo, testing 3rd-party pkg
-DESCRIBE_PROJECT = "DESCRIBE_PROJECT"
-NEW_ENTITY_CONTROLLER_INTERFACE = "NEW_ENTITY_CONTROLLER_INTERFACE"
-CONTROLLER_IMPLEMENTATION = "CONTROLLER_IMPLEMENTATION"
-STORE_INTERFACE = "STORE_INTERFACE"
-STORE_IMPLEMENTATION = "STORE_IMPLEMENTATION"
-STORE_MOCK = "STORE_MOCK"
-CONTROLLER_TEST_CASES = "CONTROLLER_TEST_CASES"
-CONTROLLER_TESTS_IMPLEMENTATION = "CONTROLLER_TESTS_IMPLEMENTATION"
-
 DESCRIBE_PROJECT = PredefinedPrompt(
-    name=DESCRIBE_PROJECT,
+    name="DESCRIBE_PROJECT",
     prompt_template="You are an expert Golang developer. "
                     "You are contributing to a project with the following tech stack: Golang, MongoDB, Docker. "
                     "The project is a system for generating and managing cooking recipes. "
@@ -35,7 +26,7 @@ DESCRIBE_PROJECT = PredefinedPrompt(
                     "My next message will include further instructions. Approve you understand.",
     args_validator=get_named_args_validator(["project_structure", "go_module_name"]))
 NEW_ENTITY_CONTROLLER_INTERFACE = PredefinedPrompt(
-    name=NEW_ENTITY_CONTROLLER_INTERFACE,
+    name="NEW_ENTITY_CONTROLLER_INTERFACE",
     postfix=COMMON_POSTFIX,
     prompt_template="I would like to implement a new controller Go type that would expose CRUD API "
                     "for an entity named {entity_name}. "
@@ -53,28 +44,28 @@ NEW_ENTITY_CONTROLLER_INTERFACE = PredefinedPrompt(
                     "Do not implement the methods declared in RegisterRoutes method.\n",
     args_validator=get_named_args_validator(["entity_name", "model"]))
 CONTROLLER_IMPLEMENTATION = PredefinedPrompt(
-    name=CONTROLLER_IMPLEMENTATION,
+    name="CONTROLLER_IMPLEMENTATION",
     postfix=COMMON_POSTFIX,
     prompt_template="Implement the methods used in func (c *{entity_name}Controller) RegisterRoutes(router fiber.Router) error",
     args_validator=get_named_args_validator(["entity_name"]))
 STORE_INTERFACE = PredefinedPrompt(
-    name=STORE_INTERFACE,
+    name="STORE_INTERFACE",
     postfix=COMMON_POSTFIX,
     prompt_template="In a file named <entity name>_store.go located in store package declare an interface for store.I{entity_name}Store",
     args_validator=get_named_args_validator(["entity_name"]))
 STORE_IMPLEMENTATION = PredefinedPrompt(
-    name=STORE_IMPLEMENTATION,
+    name="STORE_IMPLEMENTATION",
     postfix=COMMON_POSTFIX,
     prompt_template="In a file named <entity name>_store.go located in store package implement new Go type named Mongo{entity_name}Store implementing the above interface store.I{entity_name}Store",
     args_validator=get_named_args_validator(["entity_name"]))
 STORE_MOCK = PredefinedPrompt(
-    name=STORE_MOCK,
+    name="STORE_MOCK",
     postfix=COMMON_POSTFIX,
     prompt_template="Implement new Go type named MockI{entity_name}Store implementing the above interface store.I{entity_name}Store\n"
                     "MockI{entity_name}Store should embed mock.Mock from \"github.com/stretchr/testify/mock\"\n",
     args_validator=get_named_args_validator(["entity_name"]))
 CONTROLLER_TEST_CASES = PredefinedPrompt(
-    name=CONTROLLER_TEST_CASES,
+    name="CONTROLLER_TEST_CASES",
     postfix=AVOID_EXPLANATIONS,
     prompt_template="List test cases for {entity_name}Controller based on the routes declared in RegisterRoutes\n"
                     "For each tested method exposing an API route list its specific test cases including edge cases\n"
@@ -87,7 +78,7 @@ CONTROLLER_TEST_CASES = PredefinedPrompt(
                     "- What kind of assertions should be made to validate that the tested code works properly",
     args_validator=get_named_args_validator(["entity_name"]))
 CONTROLLER_TESTS_IMPLEMENTATION = PredefinedPrompt(
-    name=CONTROLLER_TESTS_IMPLEMENTATION,
+    name="CONTROLLER_TESTS_IMPLEMENTATION",
     postfix=AVOID_EXPLANATIONS,
     prompt_template="In a file named <entity name>_controller_test.go located in controllers_test package implement the above test cases for {entity_name}Controller\n using testify github.com/stretchr/testify\n"
                     "Each test function should be named declared as follows Test{entity_name}Controller_<method name>__<use case name>(t *testing.T)\n"
