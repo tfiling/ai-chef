@@ -1,9 +1,25 @@
 package llm
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"io"
 	"net/http"
 	"time"
+
+	"github.com/pkg/errors"
+)
+
+const (
+	RoleSystem    = "system"
+	RoleAssistant = "assistant"
+	RoleHuman     = "human"
+)
+
+const (
+	baseURL   = "https://api.anthropic.com/v1"
+	modelName = "claude-3-5-sonnet-latest"
 )
 
 type Message struct {
@@ -71,16 +87,6 @@ type ClaudeClient struct {
 	httpClient *http.Client
 }
 
-func NewClaudeClient(apiKey string, baseURL string) *ClaudeClient {
-	return &ClaudeClient{
-		apiKey:  apiKey,
-		baseURL: baseURL,
-		httpClient: &http.Client{
-			Timeout: time.Second * 30,
-		},
-	}
-}
-
 type RecipeGenerator struct {
 	claudeClient IClaudeClient
 }
@@ -96,4 +102,94 @@ type RecipeParser struct {
 
 func NewRecipeParser() *RecipeParser {
 	return &RecipeParser{}
+}
+
+type claudeCompletionRequest struct {
+	Model     string    `json:"model"`
+	Messages  []Message `json:"messages"`
+	System    string    `json:"system,omitempty"`
+	MaxTokens int       `json:"max_tokens"`
+}
+
+type claudeCompletionResponse struct {
+	ID           string  `json:"id"`
+	Model        string  `json:"model"`
+	Content      message `json:"content"`
+	Usage        usage   `json:"usage"`
+	StopReason   string  `json:"stop_reason"`
+	StopSequence string  `json:"stop_sequence"`
+}
+
+type message struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
+}
+
+type usage struct {
+	InputTokens  int `json:"input_tokens"`
+	OutputTokens int `json:"output_tokens"`
+	TotalTokens  int `json:"total_tokens"`
+}
+
+func NewClaudeClient(apiKey string) *ClaudeClient {
+	return &ClaudeClient{
+		apiKey:  apiKey,
+		baseURL: baseURL,
+		httpClient: &http.Client{
+			Timeout: time.Second * 30,
+		},
+	}
+}
+
+func (c *ClaudeClient) CreateCompletion(ctx context.Context, req CompletionRequest) (CompletionResponse, error) {
+	claudeReq := claudeCompletionRequest{
+		Model:     modelName,
+		Messages:  req.Messages,
+		System:    req.SystemPrompt,
+		MaxTokens: 4096,
+	}
+
+	reqBody, err := json.Marshal(claudeReq)
+	if err != nil {
+		return CompletionResponse{}, errors.Wrap(err, "failed to marshal request")
+	}
+
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.baseURL+"/messages", bytes.NewBuffer(reqBody))
+	if err != nil {
+		return CompletionResponse{}, errors.Wrap(err, "failed to create HTTP request")
+	}
+
+	c.setHeaders(httpReq)
+
+	resp, err := c.httpClient.Do(httpReq)
+	if err != nil {
+		return CompletionResponse{}, errors.Wrap(err, "failed to send request")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return CompletionResponse{}, errors.Errorf("API request failed with status %d: %s", resp.StatusCode, string(body))
+	}
+
+	var claudeResp claudeCompletionResponse
+	if err := json.NewDecoder(resp.Body).Decode(&claudeResp); err != nil {
+		return CompletionResponse{}, errors.Wrap(err, "failed to decode response")
+	}
+
+	return CompletionResponse{
+		ID:               claudeResp.ID,
+		Content:          claudeResp.Content.Text,
+		Model:            claudeResp.Model,
+		PromptTokens:     claudeResp.Usage.InputTokens,
+		CompletionTokens: claudeResp.Usage.OutputTokens,
+		TotalTokens:      claudeResp.Usage.TotalTokens,
+		FinishReason:     claudeResp.StopReason,
+	}, nil
+}
+
+func (c *ClaudeClient) setHeaders(httpReq *http.Request) {
+	httpReq.Header.Set("Content-Type", "application/json")
+	httpReq.Header.Set("x-api-key", c.apiKey)
+	httpReq.Header.Set("anthropic-version", "2023-06-01")
 }
