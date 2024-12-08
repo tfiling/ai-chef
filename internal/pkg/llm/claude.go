@@ -50,23 +50,23 @@ type RecipeRequest struct {
 }
 
 type Recipe struct {
-	ID           string
-	Name         string
-	Description  string
-	Ingredients  []Ingredient
-	Instructions string
-	PrepTime     int
-	CookTime     int
-	TotalTime    int
-	ServingSize  int
-	Difficulty   string
-	CreatedAt    time.Time
+	ID           string       `json:"id" validate:"required"`
+	Name         string       `json:"name" validate:"required"`
+	Description  string       `json:"description" validate:"required"`
+	Ingredients  []Ingredient `json:"ingredients" validate:"required,min=1,dive"`
+	Instructions string       `json:"instructions" validate:"required"`
+	PrepTime     int          `json:"prepTime" validate:"required,gt=0"`
+	CookTime     int          `json:"cookTime" validate:"required,gt=0"`
+	TotalTime    int          `json:"totalTime" validate:"required,gt=0"`
+	ServingSize  int          `json:"servingSize" validate:"required,gt=0"`
+	Difficulty   string       `json:"difficulty" validate:"required,oneof=easy medium hard"`
+	CreatedAt    time.Time    `json:"createdAt" validate:"required"`
 }
 
 type Ingredient struct {
-	Name   string
-	Amount float64
-	Unit   string
+	Name   string  `json:"name" validate:"required"`
+	Amount float64 `json:"amount" validate:"required,gt=0"`
+	Unit   string  `json:"unit" validate:"required"`
 }
 
 type IClaudeClient interface {
@@ -75,10 +75,6 @@ type IClaudeClient interface {
 
 type IRecipeGenerator interface {
 	GenerateRecipe(ctx context.Context, req RecipeRequest) (Recipe, error)
-}
-
-type IRecipeParser interface {
-	ParseRecipeFromCompletion(completion string) (Recipe, error)
 }
 
 type ClaudeClient struct {
@@ -95,13 +91,6 @@ func NewRecipeGenerator(claudeClient IClaudeClient) *RecipeGenerator {
 	return &RecipeGenerator{
 		claudeClient: claudeClient,
 	}
-}
-
-type RecipeParser struct {
-}
-
-func NewRecipeParser() *RecipeParser {
-	return &RecipeParser{}
 }
 
 type claudeCompletionRequest struct {
