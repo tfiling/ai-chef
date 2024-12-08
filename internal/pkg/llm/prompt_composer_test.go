@@ -1,26 +1,26 @@
-package llm_test
+package llm
+
+//TODO - test as a blackbox
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tfiling/ai-chef/internal/pkg/llm"
 )
 
 func TestPromptComposer_ComposeCompletionRequest__ShouldComposeValidRequest(t *testing.T) {
 	// Arrange
-	composer := llm.NewPromptComposer()
-	req := llm.RecipeRequest{
+	req := RecipeRequest{
 		Style:       "Italian",
 		ServingSize: 4,
 		TimeLimit:   60,
 	}
 
 	// Act
-	result := composer.ComposeCompletionRequest(req)
+	result := composeRecipeRequest(req)
 
 	// Assert
-	assert.Equal(t, llm.RecipeGenerationSystemPrompt, result.SystemPrompt)
+	assert.Equal(t, RecipeGenerationSystemPrompt, result.SystemPrompt)
 	assert.Len(t, result.Messages, 1)
 	assert.Equal(t, "user", result.Messages[0].Role)
 	assert.Contains(t, result.Messages[0].Content, "Italian")

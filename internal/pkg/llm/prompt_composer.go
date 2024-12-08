@@ -29,13 +29,7 @@ Serving Size: %d people
 Time Limit: %d minutes`
 )
 
-type PromptComposer struct{}
-
-func NewPromptComposer() *PromptComposer {
-	return &PromptComposer{}
-}
-
-func (pc *PromptComposer) ComposeCompletionRequest(req RecipeRequest) CompletionRequest {
+func composeRecipeRequest(req RecipeRequest) CompletionRequest {
 	return CompletionRequest{
 		SystemPrompt: RecipeGenerationSystemPrompt,
 		Messages: []Message{
