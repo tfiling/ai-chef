@@ -3,11 +3,19 @@ package controllers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/pkg/errors"
+	"github.com/tfiling/ai-chef/internal/pkg/llm"
+	"github.com/tfiling/ai-chef/internal/pkg/store"
 )
 
 const (
 	APIRouteBasePath = "/api/v1"
 )
+
+type ControllersDependencies struct {
+	RecipeStore     store.IRecipeStore
+	UserStore       store.IUserStore
+	RecipeGenerator llm.IRecipeGenerator
+}
 
 type Controller interface {
 	RegisterRoutes(router fiber.Router) error
@@ -22,6 +30,10 @@ func SetupRoutes(v1Router fiber.Router, controllers []Controller) error {
 	return nil
 }
 
-func InitControllers() (controllers []Controller, err error) {
-	return
+func InitControllers(dependencies ControllersDependencies) ([]Controller, error) {
+	return []Controller{
+		&RecipeController{RecipeStore: dependencies.RecipeStore},
+		&UserController{UserStore: dependencies.UserStore},
+		NewRecipeGenerationController(dependencies.RecipeGenerator),
+	}, nil
 }

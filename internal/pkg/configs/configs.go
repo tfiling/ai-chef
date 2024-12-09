@@ -6,7 +6,8 @@ import (
 )
 
 type Config struct {
-	ClaudeAPIKey string `mapstructure:"api_key"`
+	ClaudeAPIKey string
+	MongoDBURI   string
 }
 
 var (
@@ -15,7 +16,10 @@ var (
 )
 
 func loadConfig() {
-	instance = Config{ClaudeAPIKey: os.Getenv("CLAUDE_API_KEY")}
+	instance = Config{
+		ClaudeAPIKey: os.Getenv("CLAUDE_API_KEY"),
+		MongoDBURI:   os.Getenv("MONGODB_URI"),
+	}
 }
 func GetConfig() Config {
 	once.Do(loadConfig)

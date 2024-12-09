@@ -6,9 +6,9 @@ import (
 )
 
 type RecipeRequest struct {
-	Style       string
-	ServingSize int
-	TimeLimit   int
+	Style       string        `validate:"required"`
+	ServingSize int           `validate:"required,min=1"`
+	TimeLimit   time.Duration `validate:"required"`
 }
 
 type Recipe struct {
