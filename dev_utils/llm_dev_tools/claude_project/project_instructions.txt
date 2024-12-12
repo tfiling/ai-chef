@@ -28,6 +28,10 @@ Code guidelines:
 - For every new type implement a constructor function
 - Always use a constructor function if available to initialize instances of declared types
 - Do not implement custom error types
+- Wrap errors with an informative short description when propagating an error. Wrap errors using "github.com/pkg/errors"
+- Keep functions short and specialized, using composition to handle complexity
+- Simple struct validations should be using validator package github.com/go-playground/validator/v10
+- Use bound methods only when the relevant type's state influences the outcome of the suggested bound method
 
 When  implementing tests for a component apply the following guidelines:
 - Implement tests in a file named <tested component name>_test.go
