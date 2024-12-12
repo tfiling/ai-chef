@@ -8,7 +8,7 @@ TEMP_FILE=$(mktemp)
 # Define exclusions: List directories and files to exclude
 # EXCLUDE_DIRS=(".git" "deploy" "cmd" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github")
 # EXCLUDE_FILES=("go.mod" "go.sum" "Dockerfile" "makefile" ".gitignore" "README.md" "*.png" "*.ico" "package-lock.json")
-EXCLUDE_DIRS=(".git" "deploy" "cmd" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github" "run_outputs" "__pycache__" ".venv" "dev_utils")
+EXCLUDE_DIRS=(".git" "deploy" "cmd" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github" "run_outputs" "__pycache__" ".venv" "llm_dev_tools")
 EXCLUDE_FILES=("go.mod" "go.sum" "Dockerfile" "makefile" ".gitignore" "README.md" "*.png" "*.ico" "package-lock.json")
 
 

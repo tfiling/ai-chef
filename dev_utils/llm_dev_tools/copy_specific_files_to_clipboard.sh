@@ -3,13 +3,14 @@
 DIRECTORY="/home/galt/code/ai_chef"
 TEMP_FILE=$(mktemp)
 
-TREE_EXCLUDE_DIRS=(".git" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github" "dev_utils")
+TREE_EXCLUDE_DIRS=(".git" ".idea" "node_modules" ".venv" "test" "e2e" "docs" "ops" ".ci" ".github" "llm_dev_tools")
 
 # Define files to copy
-FILES=("dev_utils/local_dev_env/compose.yaml" "Dockerfile" "makefile")
+#FILES=("dev_utils/local_dev_env/compose.yaml" "Dockerfile" "makefile")
+FILES=()
 
 # Define directories to copy
-DIRECTORIES=()
+DIRECTORIES=("internal/pkg/configs")
 #DIRECTORIES=("deploy/fake_client/fake_data"
 #"internal/app/webserver/controllers")
 
@@ -38,6 +39,7 @@ for directory in "${DIRECTORIES[@]}"; do
     if [ -d "$directory" ]; then
         # Recursively copy files in the directory
         while IFS= read -r -d '' file; do
+            echo "Copying file $file"
             echo "File: $file" >> "$TEMP_FILE"
             cat "$file" >> "$TEMP_FILE"
             echo "" >> "$TEMP_FILE"
