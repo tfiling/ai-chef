@@ -5,7 +5,7 @@ from rest_api_service.prompts.validators import get_named_args_validator
 
 DESCRIBE_FEATURE_STEP_1 = PredefinedPrompt(
     name="DESCRIBE_FEATURE_STEP_1",
-    postfix=f"{COMMON_POSTFIX} {NO_LOGIC_IMPLEMENTATION}",
+    postfix=[COMMON_POSTFIX, NO_LOGIC_IMPLEMENTATION],
     prompt_template="Suggest a high level design for {feature_description}\n"
                     "Your high level design should include the following sections:\n"
                     "1. API exposed by new components\n"
@@ -13,8 +13,7 @@ DESCRIBE_FEATURE_STEP_1 = PredefinedPrompt(
     args_validator=get_named_args_validator(["feature_description"]))
 DESIGN_STEP_1_ADJUSTMENTS = PredefinedPrompt(
     name="DESIGN_STEP_2_WITH_ADJUSTMENTS",
-    # TODO - support multiple postfixes
-    postfix=f"{COMMON_POSTFIX} {NO_LOGIC_IMPLEMENTATION} {ACKNOWLEDGE}",
+    postfix=[COMMON_POSTFIX, NO_LOGIC_IMPLEMENTATION, ACKNOWLEDGE],
     prompt_template="I went over the suggested API and flows and changed the scope and implementation details a little bit:\n"
                     "1. API exposed by new component:\n"
                     "{modified_suggested_api}\n"
@@ -24,7 +23,7 @@ DESIGN_STEP_1_ADJUSTMENTS = PredefinedPrompt(
                                              "modified_suggested_api"]))
 DESIGN_STEP_2 = PredefinedPrompt(
     name="DESIGN_STEP_2_ACCEPTING_STEP_1",
-    postfix=f"{COMMON_POSTFIX} {NO_LOGIC_IMPLEMENTATION}",
+    postfix=[COMMON_POSTFIX, NO_LOGIC_IMPLEMENTATION],
     prompt_template="Great job!\n"
                     "Provide these additional design details based on the new scope and implementation details:\n"
                     "3. List files to be created in the format: [\"internal/pkg/llm/claude.go\", \"internal/pkg/llm/types.go\"]\n"
@@ -72,15 +71,15 @@ INCLUDE_UNATTENDED_FILES = PredefinedPrompt(
         ["project_structure", "go_module_name", "unattended_new_files", "unattended_modified_files"]))
 IMPLEMENT_SUBTASK = PredefinedPrompt(
     name="IMPLEMENT_SUBTASK",
-    postfix=f"{COMMON_POSTFIX} {NO_TESTS_IMPLEMENTATION}",
+    postfix=[COMMON_POSTFIX, NO_TESTS_IMPLEMENTATION],
     prompt_template="The project structure is as follows:\n{project_structure}\n"
                     "The Go module name is {go_module_name}\n"
                     "Based on the above feature description and design implement this subtask:\n{task}",
     args_validator=get_named_args_validator(["project_structure", "go_module_name", "task"]))
 GATHER_SUBTASK_TEST_CASES = PredefinedPrompt(
     name="IMPLEMENT_SUBTASK_TEST_CASES",
-    prefix=ROLE,
-    postfix=AVOID_EXPLANATIONS,
+    prefix=[ROLE],
+    postfix=[AVOID_EXPLANATIONS],
     prompt_template="The Go module name is {go_module_name}\n"
                     "Based on the above feature description and design and subtask implementation list required test cases:\n"
                     "{task}\n"
