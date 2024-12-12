@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from rest_api_service.prompts import feature_implementation as feature_implementation_prompts
+from rest_api_service.prompts import feature_implementation_v1 as feature_implementation_prompts
 from rest_api_service.prompts.predefined_prompt import format_prompt
 from utils.fix_broken_tests import fix_tests
 from utils.project_structure import generate_tree_structure
