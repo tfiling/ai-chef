@@ -1,4 +1,4 @@
-from common import COMMON_POSTFIX, AVOID_EXPLANATIONS
+from common import COMMON_POSTFIX, AVOID_EXPLANATIONS, ACKNOWLEDGE
 from rest_api_service.prompts.predefined_prompt import PredefinedPrompt
 from rest_api_service.prompts.validators import get_named_args_validator
 
@@ -18,12 +18,13 @@ def __get_entity_model():
 # TODO - extract tech stack: Mongo, testing 3rd-party pkg
 DESCRIBE_PROJECT = PredefinedPrompt(
     name="DESCRIBE_PROJECT",
+    postfix=f"{ACKNOWLEDGE}",
     prompt_template="You are an expert Golang developer. "
                     "You are contributing to a project with the following tech stack: Golang, MongoDB, Docker. "
                     "The project is a system for generating and managing cooking recipes. "
                     "The project structure is as follows:\n{project_structure}\n"
                     "The Go module name is {go_module_name}\n"
-                    "My next message will include further instructions. Approve you understand.",
+                    "My next message will include further instructions.",
     args_validator=get_named_args_validator(["project_structure", "go_module_name"]))
 NEW_ENTITY_CONTROLLER_INTERFACE = PredefinedPrompt(
     name="NEW_ENTITY_CONTROLLER_INTERFACE",
@@ -81,7 +82,7 @@ CONTROLLER_TESTS_IMPLEMENTATION = PredefinedPrompt(
     name="CONTROLLER_TESTS_IMPLEMENTATION",
     postfix=AVOID_EXPLANATIONS,
     prompt_template="In a file named <entity name>_controller_test.go located in controllers_test package implement the above test cases for {entity_name}Controller\n using testify github.com/stretchr/testify\n"
-                    "Each test function should be named declared as follows Test{entity_name}Controller_<method name>__<use case name>(t *testing.T)\n"
+                    "Each test function should be named as follows Test{entity_name}Controller_<method name>__<use case name>(t *testing.T)\n"
                     "Each test function should setup a fiber test app and register the {entity_name}Controller's API endpoints as part of Arrange part\n"
                     "Each test function should have the following structure:\n"
                     "//Arrange\n"

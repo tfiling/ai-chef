@@ -11,7 +11,7 @@ def send_prompt(text: str, should_wait_user=True):
 
     try:
         if should_wait_user:
-            wait_for_user("Focus on Claude's input\nClick OK to continue")
+            wait_for_user("Commit any changes.\nFocus on Claude's input\nClick OK to continue")
         result = subprocess.run([send_prompt_path, text],
                                 capture_output=True,
                                 text=True,
