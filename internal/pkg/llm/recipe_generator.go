@@ -1,7 +1,6 @@
 package llm
 
 import (
-	"context"
 	"time"
 )
 
@@ -34,20 +33,4 @@ type Ingredient struct {
 type RecipeGenerator struct {
 	claudeClient IClaudeClient
 	parser       IRecipeParser
-}
-
-func NewRecipeGenerator(claudeClient IClaudeClient, parser IRecipeParser) *RecipeGenerator {
-	return &RecipeGenerator{
-		claudeClient: claudeClient,
-		parser:       parser,
-	}
-}
-
-func (g *RecipeGenerator) GenerateRecipe(ctx context.Context, req RecipeRequest) (Recipe, error) {
-	resp, err := g.claudeClient.CreateCompletion(ctx, composeRecipeRequest(req))
-	if err != nil {
-		return Recipe{}, err
-	}
-
-	return g.parser.ParseRecipeFromCompletion(resp.Content)
 }
