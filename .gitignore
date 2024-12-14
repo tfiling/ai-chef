@@ -1,3 +1,6 @@
 /.idea/*
 /dev_utils/llm_dev_tools/prompt_builder/.idea/*
 **/__pycache__/
+
+#Build artifacts for go AST analysis scripts:
+dev_utils/llm_dev_tools/prompt_builder/go_utils/bin/*
