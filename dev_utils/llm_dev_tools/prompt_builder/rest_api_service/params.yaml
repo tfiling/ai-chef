@@ -11,6 +11,18 @@ model: |
       Username string `json:"name" validate:"required"`
   }
 
-# feature_implementation.py
+# feature_implementation_v1.py / feature_implementation_v2.py
 feature_description: |
   a component that uses Claude's API for generating recipes. There should be a Claude client component and a component that composes the prompts for generating the recipes using Claude's client component.
+
+# feature_implementation_v2.py
+# Specific types extracted from files
+# expected format: internal/pkg/llm/claude.go:Message
+relevant_specific_types: []
+
+# feature_implementation_v2.py
+# Will extract all types in the listed files
+relevant_types:
+  - internal/pkg/llm/claude.go
+  - internal/pkg/llm/parser.go
+  - internal/pkg/llm/recipe_generator.go

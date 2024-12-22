@@ -1,7 +1,9 @@
 import os
+import pathlib
 import subprocess
 
-DIRECTORY = "/home/galt/code/ai_chef"
+import consts
+
 EXCLUDE_DIRS = [
     # Generic
     ".git",
@@ -19,12 +21,12 @@ EXCLUDE_DIRS = [
 ]
 
 # TODO - supporting hiding test files
-def generate_tree_structure() -> str:
-    if not os.path.isdir(DIRECTORY):
-        raise FileNotFoundError(f"{DIRECTORY} does not exist.")
+def generate_tree_structure(project_path=consts.PROJECT_PATH) -> str:
+    if not os.path.isdir(project_path):
+        raise FileNotFoundError(f"{project_path} does not exist.")
 
     exclude_pattern = " ".join([f"-I {dir}" for dir in EXCLUDE_DIRS])
-    tree_command = f"tree {DIRECTORY} {exclude_pattern}"
+    tree_command = f"tree {project_path} {exclude_pattern}"
     print(tree_command)
 
     try:
@@ -45,3 +47,6 @@ def generate_tree_structure() -> str:
         print(f"Unexpected error: {ex}")
         print(f"Failed to generate tree structure: {ex}")
         exit(1)
+
+if __name__ == '__main__':
+    print(generate_tree_structure(pathlib.Path("/home/galt/code/cracking_the_coding_interview")))

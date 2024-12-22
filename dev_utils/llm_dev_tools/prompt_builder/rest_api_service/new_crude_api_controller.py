@@ -2,6 +2,8 @@ import typing
 from pathlib import Path
 
 import yaml
+
+import consts
 from rest_api_service.prompts.predefined_prompt import format_prompt
 from utils.fix_broken_tests import fix_tests
 from utils.send_prompt import send_prompt
@@ -27,7 +29,7 @@ def run_new_crude_api_controller_flow(**flow_args):
     for predefined_prompt in prompts:
         send_prompt(format_prompt(predefined_prompt, **flow_args))
 
-    base_dir = flow_args.get("base_dir", "/home/galt/code/ai_chef")
+    base_dir = flow_args.get("base_dir", str(consts.PROJECT_PATH))
     fix_tests(base_dir)
 
 

@@ -3,6 +3,7 @@ import sys
 import traceback
 import typing
 
+import consts
 from utils.send_prompt import send_prompt
 
 
@@ -35,4 +36,4 @@ def _extract_failed_tests_outputs(tests_output: str) -> typing.List[str]:
     return ["=== RUN" + t for t in tests_output.split("=== RUN") if "--- FAIL" in t]
 
 if __name__ == '__main__':
-    fix_tests(base_dir="/home/galt/code/ai_chef")
+    fix_tests(base_dir=consts.PROJECT_PATH)

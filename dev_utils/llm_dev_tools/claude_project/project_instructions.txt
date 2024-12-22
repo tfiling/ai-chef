@@ -32,6 +32,8 @@ Code guidelines:
 - Keep functions short and specialized, using composition to handle complexity
 - Simple struct validations should be using validator package github.com/go-playground/validator/v10
 - Use bound methods only when the relevant type's state influences the outcome of the suggested bound method
+- Define types in the same file where they are used (e.g., JSON unmarshal types belong in handler files)
+- Place shared marshal types (like gRPC protocols) in separate packages when used across multiple services
 
 When  implementing tests for a component apply the following guidelines:
 - Implement tests in a file named <tested component name>_test.go
