@@ -2,7 +2,12 @@ from common import COMMON_POSTFIX, AVOID_EXPLANATIONS, ROLE, NO_TESTS_IMPLEMENTA
     ACKNOWLEDGE, COMMON_PREFIX
 from rest_api_service.prompts.predefined_prompt import PredefinedPrompt
 from rest_api_service.prompts.validators import get_named_args_validator
+"""
+Prompts for generating code that implements a general feature described - second attempt
 
+The whole flow should include design for the feature, break down implementation into tasks,
+implementation of the tasks including tests implementation.
+"""
 
 INITIAL_DESIGN_ANALYSIS = PredefinedPrompt(
     name="INITIAL_DESIGN_ANALYSIS",

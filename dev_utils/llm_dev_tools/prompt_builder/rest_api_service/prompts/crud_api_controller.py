@@ -1,18 +1,11 @@
+"""
+Prompts for generating code exposing CRUD API for a new entity
+
+The whole flow should implement a controller exposing the API, data access object, mock for the data access object, and tests
+"""
 from common import COMMON_POSTFIX, AVOID_EXPLANATIONS, ACKNOWLEDGE
 from rest_api_service.prompts.predefined_prompt import PredefinedPrompt
 from rest_api_service.prompts.validators import get_named_args_validator
-
-
-def __get_entity_model():
-    """Expects the user to past the type declaration of the model."""
-    print("Paste new entity model here(avoid empty lines):")
-    lines = []
-    while True:
-        line = input()
-        if line == '':  # Empty line to stop
-            break
-        lines.append(line)
-    return {"model": "\n".join(lines)}
 
 
 # TODO - extract tech stack: Mongo, testing 3rd-party pkg

@@ -1,3 +1,9 @@
+"""
+Prompts for generating code that implements a general feature described - first attempt
+
+The whole flow should include design for the feature, break down implementation into tasks,
+implementation of the tasks including tests implementation.
+"""
 from common import COMMON_POSTFIX, AVOID_EXPLANATIONS, ROLE, NO_TESTS_IMPLEMENTATION, NO_LOGIC_IMPLEMENTATION, \
     ACKNOWLEDGE
 from rest_api_service.prompts.predefined_prompt import PredefinedPrompt
